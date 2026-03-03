@@ -4,6 +4,7 @@ import express from "express";
 import ejs from "ejs";
 import mongoose from "mongoose";
 import encrypt from "mongoose-encryption";
+import md5 from "md5";
 
 const MONGO_URI = process.env.MONGO_URL;
 
@@ -47,7 +48,7 @@ app.get("/register", (req, res) => {
 app.post("/register", async (req, res) => {
   const newUser = User({
     username: req.body.username,
-    password: req.body.password,
+    password: md5(req.body.password),
   });
 
   try {
@@ -65,7 +66,7 @@ app.get("/login", (req, res) => {
 app.post("/login", async (req, res) => {
   try {
     const username = req.body.username;
-    const password = req.body.password;
+    const password = md5(req.body.password);
 
     const foundUser = await User.findOne({ username: username });
 
