@@ -1,8 +1,16 @@
-//jshint esversion:6
+import "dotenv/config";
 import bodyParser from "body-parser";
 import express from "express";
 import ejs from "ejs";
 import mongoose from "mongoose";
+import encrypt from "mongoose-encryption";
+
+const MONGO_URI = process.env.MONGO_URL;
+
+mongoose
+  .connect(MONGO_URI)
+  .then(() => console.log("Connected to Atlas"))
+  .catch((err) => console.log(err));
 
 const app = express();
 const port = 3000;
@@ -14,13 +22,17 @@ app.use(
     extended: true,
   }),
 );
-
-mongoose.connect("mongodb://127.0.0.1:27017/userDB");
-
-const userSchema = {
+// creating a new database for user
+const userSchema = new mongoose.Schema({
   username: String,
   password: String,
-};
+});
+
+// encrypting the information of the user
+userSchema.plugin(encrypt, {
+  secret: process.env.SECRETE,
+  encryptedFields: ["password"],
+});
 
 const User = new mongoose.model("User", userSchema);
 
@@ -34,7 +46,7 @@ app.get("/register", (req, res) => {
 
 app.post("/register", async (req, res) => {
   const newUser = User({
-    email: req.body.username,
+    username: req.body.username,
     password: req.body.password,
   });
 
@@ -48,6 +60,26 @@ app.post("/register", async (req, res) => {
 
 app.get("/login", (req, res) => {
   res.render("login.ejs");
+});
+
+app.post("/login", async (req, res) => {
+  try {
+    const username = req.body.username;
+    const password = req.body.password;
+
+    const foundUser = await User.findOne({ username: username });
+
+    if (!foundUser) {
+      return res.send("user not found");
+    }
+    if (foundUser.password === password) {
+      res.render("secrets.ejs");
+    } else {
+      res.send("Incorrect password");
+    }
+  } catch (err) {
+    console.log(err);
+  }
 });
 
 app.listen(port, () => {
