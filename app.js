@@ -3,9 +3,9 @@ import bodyParser from "body-parser";
 import express from "express";
 import ejs from "ejs";
 import mongoose from "mongoose";
-import bcrypt from "bcrypt";
-
-const saltRounds = 10;
+import session from "express-session";
+import passport from "passport";
+import passportLocalMongoose from "passport-local-mongoose";
 
 const MONGO_URI = process.env.MONGO_URL;
 
@@ -24,13 +24,27 @@ app.use(
     extended: true,
   }),
 );
-// creating a new database for user
+app.use(
+  session({
+    secret: "Our little secrete",
+    resave: false, // dont save the seesion data if anything happened.
+    saveUninitialized: false, // dont inialize session unless a user logged in.
+  }),
+);
+
+app.use(passport.initialize());
+app.use(passport.session());
+
 const userSchema = new mongoose.Schema({
   username: String,
   password: String,
 });
+userSchema.plugin(passportLocalMongoose.default); // to hash and salt clients password and store inside db.
 
 const User = new mongoose.model("User", userSchema);
+passport.use(User.createStrategy()); // checks username and password from the DB
+passport.serializeUser(User.serializeUser()); //stores  the user id in the session
+passport.deserializeUser(User.deserializeUser()); // reades user id from session and fetch full user info from db to atach into req.user.
 
 app.get("/", (req, res) => {
   res.render("home.ejs");
@@ -41,45 +55,13 @@ app.get("/register", (req, res) => {
 });
 
 // encrypting users password using bcrypt.
-app.post("/register", async (req, res) => {
-  const hashedPassword = bcrypt.hash(req.body.password, saltRounds);
-  const newUser = User({
-    username: req.body.username,
-    password: hashedPassword,
-  });
-
-  try {
-    await newUser.save();
-    res.render("secrets.ejs");
-  } catch (err) {
-    console.log(err);
-  }
-});
+app.post("/register", async (req, res) => {});
 
 app.get("/login", (req, res) => {
   res.render("login.ejs");
 });
 
-app.post("/login", async (req, res) => {
-  try {
-    const username = req.body.username;
-    const password = req.body.password;
-
-    const foundUser = await User.findOne({ username });
-    if (!foundUser) {
-      return res.send("user not found");
-    }
-    const match = await bcrypt.compare(password, foundUser.password);
-    if (match) {
-      res.render("secrets.ejs");
-    } else {
-      res.send("Incorrect password");
-    }
-  } catch (err) {
-    console.log(err);
-    res.status(500).send("Server error");
-  }
-});
+app.post("/login", async (req, res) => {});
 
 app.listen(port, () => {
   console.log(`listening on port ${port}.`);
