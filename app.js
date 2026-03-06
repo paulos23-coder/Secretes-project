@@ -54,8 +54,31 @@ app.get("/register", (req, res) => {
   res.render("register.ejs");
 });
 
+app.get("/secrets", (req, res) => {
+  if (req.isAuthenticated()) {
+    res.render("/secrets");
+  } else {
+    res.redirect("/login");
+  }
+});
+
 // encrypting users password using bcrypt.
-app.post("/register", async (req, res) => {});
+app.post("/register", async (req, res) => {
+  User.register(
+    { username: req.body.username },
+    req.body.password,
+    function (err, user) {
+      if (err) {
+        console.log(err);
+        res.redirect("/register");
+      } else {
+        passport.authenticate("local")(req, res, function () {
+          res.redirect("/secrets");
+        });
+      }
+    },
+  );
+});
 
 app.get("/login", (req, res) => {
   res.render("login.ejs");
