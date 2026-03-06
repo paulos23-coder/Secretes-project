@@ -62,6 +62,11 @@ app.get("/secrets", (req, res) => {
   }
 });
 
+app.get("/logout", (req, res) => {
+  req.logout();
+  res.redirect("/");
+});
+
 // encrypting users password using bcrypt.
 app.post("/register", async (req, res) => {
   User.register(
@@ -84,7 +89,23 @@ app.get("/login", (req, res) => {
   res.render("login.ejs");
 });
 
-app.post("/login", async (req, res) => {});
+app.post("/login", async (req, res) => {
+  const user = new User({
+    username: req.body.username,
+    password: req.body.password,
+  });
+
+  req.login(user, function (err) {
+    if (err) {
+      console.log(err);
+      res.redirect("/login");
+    } else {
+      passport.authenticate("local")(req, res, function () {
+        res.redirect("/secretes");
+      });
+    }
+  });
+});
 
 app.listen(port, () => {
   console.log(`listening on port ${port}.`);
