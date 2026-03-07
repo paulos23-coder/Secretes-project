@@ -6,6 +6,8 @@ import mongoose from "mongoose";
 import session from "express-session";
 import passport from "passport";
 import passportLocalMongoose from "passport-local-mongoose";
+import { Strategy as GoogleStrategy } from "passport-google-oauth20";
+import findOrCreate from "mongoose-findorcreate";
 
 const MONGO_URI = process.env.MONGO_URL;
 
@@ -40,11 +42,27 @@ const userSchema = new mongoose.Schema({
   password: String,
 });
 userSchema.plugin(passportLocalMongoose.default); // to hash and salt clients password and store inside db.
+userSchema.plugin(findOrCreate);
 
 const User = new mongoose.model("User", userSchema);
 passport.use(User.createStrategy()); // checks username and password from the DB
 passport.serializeUser(User.serializeUser()); //stores  the user id in the session
 passport.deserializeUser(User.deserializeUser()); // reades user id from session and fetch full user info from db to atach into req.user.
+
+passport.use(
+  new GoogleStrategy(
+    {
+      clientID: process.env.CLIENT_ID,
+      clientSecret: process.env.CLIENT_SECRET,
+      callbackURL: "http://localhost:3000/auth/google/secrets",
+    },
+    function (accessToken, refreshToken, profile, cb) {
+      User.findOrCreate({ googleId: profile.id }, function (err, user) {
+        return cb(err, user);
+      });
+    },
+  ),
+);
 
 app.get("/", (req, res) => {
   res.render("home.ejs");
