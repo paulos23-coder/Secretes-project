@@ -1,15 +1,22 @@
 ## SECRET PROJECT
 
---A secrete confession web-app which lets users confess users about their secretes anonymously to help people with mental helth conditions.
---Fully responsive with intuitive UIX
+--<p>A secrete confession web-app which lets users confess users about their secretes anonymously to help people with mental helth conditions.</p>
+--<p>Fully responsive with intuitive UIX</p>
 
 
 ## Technologies used
---[![EJS](https://raw.githubusercontent.com/github/explore/main/topics/ejs/ejs.png)](https://ejs.co/)
---[![Node.js](https://raw.githubusercontent.com/github/explore/main/topics/nodejs/nodejs.png)](https://nodejs.org/)
---[![Express](https://raw.githubusercontent.com/github/explore/main/topics/express/express.png)](https://expressjs.com/)
---[![MongoDB](https://raw.githubusercontent.com/github/explore/main/topics/mongodb/mongodb.png)](https://www.mongodb.com/)
---[![CSS](https://raw.githubusercontent.com/github/explore/main/topics/css/css.png)](https://developer.mozilla.org/en-US/docs/Web/CSS)
+<a href="https://nodejs.org/" target="_blank">
+  <img src="https://raw.githubusercontent.com/github/explore/main/topics/nodejs/nodejs.png" alt="Node.js" width="30" />
+</a>
+<a href="https://expressjs.com/" target="_blank">
+  <img src="https://raw.githubusercontent.com/github/explore/main/topics/express/express.png" alt="Express" width="30" />
+</a>
+<a href="https://www.mongodb.com/" target="_blank">
+  <img src="https://raw.githubusercontent.com/github/explore/main/topics/mongodb/mongodb.png" alt="MongoDB" width="30" />
+</a>
+<a href="https://developer.mozilla.org/en-US/docs/Web/CSS" target="_blank">
+  <img src="https://raw.githubusercontent.com/github/explore/main/topics/css/css.png" alt="CSS" width="30" />
+</a>
 
 ## Inspiration
 -- Inspired by a telegram channel called vent here.
