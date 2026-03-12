@@ -1,7 +1,8 @@
 ## SECRET PROJECT
 
---<p>A secrete confession web-app which lets users confess users about their secretes anonymously to help people with mental helth conditions.</p>
---<p>Fully responsive with intuitive UIX</p>
+<p>--A secrete confession web-app which lets users confess users about their secretes anonymously to help people with mental helth conditions.</p>
+<p>--Fully responsive with intuitive UIX</p>
+<p>Used sign in & log in with google preference for users</p>
 
 
 ## Technologies used
@@ -16,6 +17,9 @@
 </a>
 <a href="https://developer.mozilla.org/en-US/docs/Web/CSS" target="_blank">
   <img src="https://raw.githubusercontent.com/github/explore/main/topics/css/css.png" alt="CSS" width="30" />
+</a>
+<a href="https://ejs.co/" target="_blank">
+  <img src="https://raw.githubusercontent.com/github/explore/main/topics/ejs/ejs.png" alt="EJS" width="30" />
 </a>
 
 ## Inspiration
